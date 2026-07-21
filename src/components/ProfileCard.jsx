@@ -16,7 +16,6 @@ const round = (v, precision = 3) => parseFloat(v.toFixed(precision));
 const adjust = (v, fMin, fMax, tMin, tMax) =>
   round(tMin + ((tMax - tMin) * (v - fMin)) / (fMax - fMin));
 
-// Inject keyframes once
 const KEYFRAMES_ID = "pc-keyframes";
 if (typeof document !== "undefined" && !document.getElementById(KEYFRAMES_ID)) {
   const style = document.createElement("style");
@@ -363,10 +362,9 @@ const ProfileCardComponent = ({
     onContactClick?.();
   }, [onContactClick]);
 
-  // Complex styles that require CSS variables and can't be done with Tailwind
   const shineStyle = {
     maskImage: "var(--icon)",
-    maskMode: "luminance",
+    maskMode: "luminosity",
     maskRepeat: "repeat",
     maskSize: "150%",
     maskPosition:
@@ -492,13 +490,10 @@ const ProfileCardComponent = ({
               gridArea: "1 / -1",
             }}
           >
-            {/* Shine layer */}
             <div style={shineStyle} />
 
-            {/* Glare layer */}
             <div style={glareStyle} />
 
-            {/* Avatar content */}
             <div
               className="overflow-visible backface-hidden"
               style={{
@@ -510,7 +505,7 @@ const ProfileCardComponent = ({
               }}
             >
               <img
-                className="w-full absolute left-1/2 bottom-[-100px] backface-hidden will-change-transform transition-transform duration-[120ms] ease-out"
+                className="w-full absolute left-1/2 bottom-[-100px] backface-hidden transition-transform duration-[120ms] ease-out"
                 src={avatarUrl}
                 alt={`${name || "User"} avatar`}
                 loading="lazy"
@@ -590,7 +585,6 @@ const ProfileCardComponent = ({
               )}
             </div>
 
-            {/* Details content */}
             <div
               className="max-h-full overflow-hidden text-center relative z-[5]"
               style={{
