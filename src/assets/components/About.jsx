@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import ScrollFloat from "../../components/ScrollFloat";
 import ProfileCard from "../../components/ProfileCard";
 import CoreExpertise from "../../components/CoreExpertise";
@@ -74,9 +74,7 @@ const About = () => {
             showUserInfo
             enableTilt={true}
             enableMobileTilt={false}
-            onContactClick={() => console.log("Contact clicked")}
             behindGlowColor="rgba(125, 190, 255, 0.67)"
-            iconUrl=""
             behindGlowEnabled
             innerGradient="linear-gradient(145deg,#60496e8c 0%,#71C4FF44 100%)"
           />

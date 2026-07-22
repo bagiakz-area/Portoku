@@ -293,6 +293,12 @@ export default function MetallicPaint({
 
   const [ready, setReady] = useState(false);
   const [textureReady, setTextureReady] = useState(false);
+  // Some Android Chrome builds (older/low-end GPUs, data-saver mode, GPU
+  // blocklist entries) don't support WebGL2. Without a fallback, the
+  // <canvas> is left with a failed context and the browser paints its own
+  // "broken content" placeholder icon in its place - worse than just
+  // showing a plain static logo image.
+  const [webglSupported, setWebglSupported] = useState(true);
 
   useEffect(() => {
     speedRef.current = speed;
@@ -381,7 +387,10 @@ export default function MetallicPaint({
   }, []);
 
   useEffect(() => {
-    if (!initGL()) return;
+    if (!initGL()) {
+      setWebglSupported(false);
+      return;
+    }
 
     const canvas = canvasRef.current;
     const gl = glRef.current;
@@ -520,6 +529,16 @@ export default function MetallicPaint({
       canvas.removeEventListener('mousemove', handleMouseMove);
     };
   }, [ready, textureReady]);
+
+  if (!webglSupported) {
+    return (
+      <img
+        src={imageSrc}
+        alt=""
+        className="block h-full w-full object-contain"
+      />
+    );
+  }
 
   return <canvas ref={canvasRef} className="block h-full w-full object-contain" />;
 }

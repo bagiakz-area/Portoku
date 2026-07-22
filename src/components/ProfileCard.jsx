@@ -335,12 +335,15 @@ const ProfileCardComponent = ({
       "--background-x": "50%",
       "--background-y": "50%",
       "--card-radius": cardRadius,
-      "--sunpillar-1": "hsl(2, 100%, 73%)",
-      "--sunpillar-2": "hsl(53, 100%, 69%)",
-      "--sunpillar-3": "hsl(93, 100%, 69%)",
-      "--sunpillar-4": "hsl(176, 100%, 76%)",
-      "--sunpillar-5": "hsl(228, 100%, 74%)",
-      "--sunpillar-6": "hsl(283, 100%, 73%)",
+      // Was a full rainbow (red/yellow/green/cyan/blue/purple) - replaced
+      // with a blue/white range that matches the site's accent color
+      // instead of clashing with it.
+      "--sunpillar-1": "hsl(205, 90%, 78%)",
+      "--sunpillar-2": "hsl(200, 100%, 88%)",
+      "--sunpillar-3": "hsl(212, 85%, 70%)",
+      "--sunpillar-4": "hsl(195, 100%, 85%)",
+      "--sunpillar-5": "hsl(222, 80%, 68%)",
+      "--sunpillar-6": "hsl(230, 60%, 75%)",
       "--sunpillar-clr-1": "var(--sunpillar-1)",
       "--sunpillar-clr-2": "var(--sunpillar-2)",
       "--sunpillar-clr-3": "var(--sunpillar-3)",
@@ -498,7 +501,6 @@ const ProfileCardComponent = ({
               className="overflow-visible backface-hidden"
               style={{
                 mixBlendMode: "luminosity",
-                transform: "translateZ(2px)",
                 gridArea: "1 / -1",
                 borderRadius: cardRadius,
                 pointerEvents: "none",
@@ -567,21 +569,18 @@ const ProfileCardComponent = ({
                       </div>
                     </div>
                   </div>
-                  <a href="#contact">
-                    <button
-                      className="border border-white/10 rounded-lg px-4 py-3 text-xs font-semibold text-white/90 cursor-pointer backdrop-blur-[10px] transition-all duration-200 ease-out hover:border-white/40 hover:-translate-y-px whitespace-nowrap flex-shrink-0"
-                      onClick={handleContactClick}
-                      style={{
-                        pointerEvents: "auto",
-                        display: "block",
-                        gridArea: "auto",
-                        borderRadius: "8px",
-                      }}
-                      type="button"
-                      aria-label={`Contact ${name || "user"}`}
-                    >
-                      {contactText}
-                    </button>
+                  <a
+                    href="#kontak"
+                    className="border border-white/10 rounded-lg px-4 py-3 text-xs font-semibold text-white/90 cursor-pointer backdrop-blur-[10px] transition-all duration-200 ease-out hover:border-white/40 hover:-translate-y-px whitespace-nowrap flex-shrink-0 inline-block text-center"
+                    onClick={handleContactClick}
+                    style={{
+                      pointerEvents: "auto",
+                      gridArea: "auto",
+                      borderRadius: "8px",
+                    }}
+                    aria-label={`Contact ${name || "user"}`}
+                  >
+                    {contactText}
                   </a>
                 </div>
               )}
@@ -613,7 +612,7 @@ const ProfileCardComponent = ({
                     WebkitTextFillColor: "transparent",
                     backgroundClip: "text",
                     WebkitBackgroundClip: "text",
-                    display: "blok",
+                    display: "block",
                     gridArea: "auto",
                     borderRadius: "0",
                     pointerEvents: "auto",

@@ -1,4 +1,4 @@
-import React, { useState, useRef, useEffect } from "react";
+import { useState, useRef, useEffect } from "react";
 import GlassSurface from "../../components/ui/GlassSurface";
 import MetallicPaint from "../../components/MetallicPaint";
 import GooeyNav from "../../components/GooeyNav";
@@ -8,11 +8,7 @@ import SpecularButton from "../../components/SpecularButton";
 import Preloader from "../../components/Preloader";
 import wbagiaLogo from "../wbagia-logo.webp";
 import cvFile from "@/assets/CV_WahyuBagia.pdf";
-import LocationIcon from "@iconify-react/mdi/location";
 import { Icon } from "@iconify/react";
-
-const TYPE_SPEED_MS = 26;
-const TYPE_START_DELAY_MS = 700;
 
 const HERO_DESC = [
   { text: "A ", highlight: false },
@@ -24,24 +20,6 @@ const HERO_DESC = [
   { text: " secure and ", highlight: false },
   { text: "well-managed.", highlight: true },
 ];
-const HERO_DESC_LENGTH = HERO_DESC.reduce((sum, seg) => sum + seg.text.length, 0);
-
-const renderTypedSegments = (segments, count) => {
-  let remaining = count;
-  return segments.map((seg, i) => {
-    if (remaining <= 0) return null;
-    const sliceLen = Math.min(seg.text.length, remaining);
-    remaining -= sliceLen;
-    const content = seg.text.slice(0, sliceLen);
-    return seg.highlight ? (
-      <span key={i} className="text-gray-400 font-extrabold">
-        {content}
-      </span>
-    ) : (
-      <React.Fragment key={i}>{content}</React.Fragment>
-    );
-  });
-};
 
 const Home = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -50,44 +28,26 @@ const Home = () => {
 
   const heroRef = useRef(null);
   const [heroVisible, setHeroVisible] = useState(false);
-  const [typedCount, setTypedCount] = useState(0);
 
   useEffect(() => {
-    const el = heroRef.current;
-    if (!el) return;
+    if (heroVisible) return;
 
-    const observer = new IntersectionObserver(
-      ([entry]) => {
-        if (entry.isIntersecting) {
-          setHeroVisible(true);
-          observer.disconnect();
-        }
-      },
-      { threshold: 0.2 }
-    );
+    // Reveal the hero once the preloader finishes - this is a trigger we
+    // already know fires reliably (the nav logo's fade-in depends on the
+    // same isLoading flag). Previously this used an IntersectionObserver
+    // on the hero element, but in production that observer apparently
+    // never reported "visible", leaving the entire hero section stuck at
+    // opacity-0 forever - the bug behind the missing hero content.
+    if (!isLoading) {
+      setHeroVisible(true);
+      return;
+    }
 
-    observer.observe(el);
-    return () => observer.disconnect();
-  }, []);
-
-  useEffect(() => {
-    if (!heroVisible) return;
-
-    let intervalId;
-    const timeoutId = setTimeout(() => {
-      let count = 0;
-      intervalId = setInterval(() => {
-        count += 1;
-        setTypedCount(count);
-        if (count >= HERO_DESC_LENGTH) clearInterval(intervalId);
-      }, TYPE_SPEED_MS);
-    }, TYPE_START_DELAY_MS);
-
-    return () => {
-      clearTimeout(timeoutId);
-      clearInterval(intervalId);
-    };
-  }, [heroVisible]);
+    // Hard safety net: no matter what, never let the hero stay invisible
+    // for more than a few seconds.
+    const timeoutId = setTimeout(() => setHeroVisible(true), 4000);
+    return () => clearTimeout(timeoutId);
+  }, [isLoading, heroVisible]);
 
   return (
     <div className="home-section relative min-h-screen bg-slate-950 text-white font-[syne] antialiased overflow-x-hidden">
@@ -303,7 +263,7 @@ const Home = () => {
         <header
           id="hero"
           ref={heroRef}
-          className={`absolute inset-0 z-10 flex flex-col items-center justify-top py-50 text-center px-6 sm:px-12 lg:px-24 scroll-mt-24 transition-all duration-1000 ease-out ${
+          className={`absolute inset-0 z-10 flex flex-col items-center justify-top py-60 text-center px-6 sm:px-12 sm:py-45 lg:px-24 scroll-mt-24 transition-all duration-1000 ease-out ${
             heroVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-8"
           }`}
         >
@@ -328,10 +288,15 @@ const Home = () => {
                 </span>
               </span>
             </h1>
-            <p className="text-lg max-w-90 font-semibold mb-3.5 sm:text-3xl mx-auto max-w-140 min-h-[3em] sm:min-h-[2.4em]">
-              {renderTypedSegments(HERO_DESC, typedCount)}
-              {typedCount < HERO_DESC_LENGTH && (
-                <span className="inline-block w-[2px] h-[0.9em] bg-white/70 align-middle ml-0.5 animate-pulse" />
+            <p className="text-lg font-semibold mb-3.5 sm:text-3xl mx-auto max-w-140">
+              {HERO_DESC.map((seg, i) =>
+                seg.highlight ? (
+                  <span key={i} className="text-gray-400 font-extrabold">
+                    {seg.text}
+                  </span>
+                ) : (
+                  seg.text
+                )
               )}
             </p>
             <p className="location mb-2.5 text-xl flex gap-1.5 items-center justify-center">
@@ -355,7 +320,6 @@ const Home = () => {
               followMouse
               proximity={340}
               autoAnimate={false}
-              onClick={() => console.log("clicked")}
             >
               <div className="btn-project mb">
                 <a href="#proyek" className="flex items-center justify-center ">
