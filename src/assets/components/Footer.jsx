@@ -18,7 +18,9 @@ const Footer = () => {
       </div>
 
       <a
-        href="#kontak"
+        href="https://wa.me/6289525996024?text=Hi%20Wahyu"
+        target="_blank"
+        rel="noopener noreferrer"
         className="order-1 flex items-center gap-2 rounded-full bg-white px-6 py-3 font-medium text-black transition-all duration-300 hover:scale-105 hover:shadow-[0_0_24px_rgba(0,120,255,0.45)] sm:order-2 sm:justify-self-center"
       >
         Contact Me ↗
