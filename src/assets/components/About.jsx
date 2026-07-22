@@ -2,14 +2,11 @@ import React, { useEffect, useRef, useState } from "react";
 import ScrollFloat from "../../components/ScrollFloat";
 import ProfileCard from "../../components/ProfileCard";
 import CoreExpertise from "../../components/CoreExpertise";
-import Guwa from "../guwa.jpg";
+import Guwa from "../guwa.webp";
 import PlainCard from "@/components/Plaincard";
 import SpinAnchor from "@/components/SpinAnchor";
 import { Icon } from "@iconify/react";
 
-// Hook kecil: kasih ref ke elemen mana aja, dia bakal balikin `true` sekali
-// pas elemen itu masuk viewport (di-scroll ke arah situ) — abis itu berhenti
-// mantau (disconnect), jadi animasinya cuma jalan sekali per elemen.
 const useRevealOnScroll = (threshold = 0.15) => {
   const ref = useRef(null);
   const [isVisible, setIsVisible] = useState(false);
@@ -35,9 +32,6 @@ const useRevealOnScroll = (threshold = 0.15) => {
   return [ref, isVisible];
 };
 
-// Class dasar buat transisinya: durasi agak panjang (900ms) + easing custom
-// (mirip "easeOutExpo") biar geraknya berasa mulus & premium, bukan kaku
-// kayak ease-out bawaan Tailwind. Tinggal digabung sama state visible/hidden.
 const REVEAL_BASE =
   "transition-all duration-[900ms] ease-[cubic-bezier(0.16,1,0.3,1)]";
 const REVEAL_HIDDEN = "opacity-0 translate-y-10 blur-sm";
@@ -63,7 +57,7 @@ const About = () => {
         ABOUT ME
       </ScrollFloat>
 
-      <div className="aboutku sm:flex sm:mt-20">
+      <div className="aboutku sm:flex sm:mt-20 sm:gap-x-8">
         <div
           ref={profileRef}
           className={`profile-card w-fit mx-auto scale-76 -mt-5 sm:mx-0 sm:scale-100 sm:pl-20 ${REVEAL_BASE} ${
@@ -82,7 +76,7 @@ const About = () => {
             enableMobileTilt={false}
             onContactClick={() => console.log("Contact clicked")}
             behindGlowColor="rgba(125, 190, 255, 0.67)"
-            iconUrl="/assets/demo/iconpattern.png"
+            iconUrl=""
             behindGlowEnabled
             innerGradient="linear-gradient(145deg,#60496e8c 0%,#71C4FF44 100%)"
           />
@@ -90,14 +84,14 @@ const About = () => {
 
         <div
           ref={factRef}
-          className={`fact px-8 w-full mb-20 mx-auto text-center sm:max-w-150 sm:text-start sm:mt-0 delay-150 ${REVEAL_BASE} ${
+          className={`fact px-8 w-full mb-20 mx-auto text-center sm:mx-0 sm:max-w-150 sm:text-start sm:mt-0 delay-150 ${REVEAL_BASE} ${
             factVisible ? REVEAL_VISIBLE : REVEAL_HIDDEN
           }`}
         >
           <h2 className="text-gray-100 font-bold text-4xl mb-4 sm:text-6xl">
             Who am i?
           </h2>
-          <p className="text-shadow-white font-semibold text-lg sm:pt-12 sm:text-2xl">
+          <p className="text-shadow-white font-semibold text-sm sm:pt-12 sm:text-2xl">
             I'm Wahyu Bagia <br />
             —I Gusti Ngurah Kadek Wahyu Bagia — <br />
             from Gianyar, Bali. I'm studying Information Systems at Universitas
@@ -132,7 +126,7 @@ const About = () => {
           <h1 className="text-gray-100 font-bold text-3xl mb-4 font-[syne]">
             SKILLS
           </h1>
-          <div className="work w-full grid grid-cols-[repeat(auto-fit,minmax(90px,1fr))] gap-y-6 gap-x-3 place-items-center">
+          <div className="work w-full grid grid-cols-3 gap-y-6 gap-x-3 place-items-center lg:flex lg:flex-nowrap lg:items-center lg:justify-between lg:gap-y-0">
             <p className="flex flex-col items-center">
               <a
                 href="https://www.w3schools.com/html/html_intro.asp"

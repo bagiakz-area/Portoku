@@ -130,7 +130,7 @@ const Preloader = ({ logoSrc, targetRef, onComplete }) => {
 
       <div className="relative h-40 w-full max-w-md">
         <PhaseBlock active={phase === "count"}>
-          <span className="font-[syne] text-6xl font-extrabold text-white tabular-nums">
+          <span className="font-[fira_code] text-6xl font-extrabold text-white tabular-nums">
             {percent}%
           </span>
           <div className="mt-4 h-[2px] w-40 overflow-hidden rounded-full bg-white/15">

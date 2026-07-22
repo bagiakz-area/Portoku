@@ -215,13 +215,20 @@ const Ferrofluid = ({
   const rendererRef = useRef(null);
   const mouseTargetRef = useRef([0, 0]);
   const lastTimeRef = useRef(0);
+  const autoPausedRef = useRef(false);
 
   useEffect(() => {
     const container = containerRef.current;
     if (!container) return;
 
+    // Cap the device pixel ratio: on most phones window.devicePixelRatio is
+    // 2-3, which quadruples/nonuples the number of fragment-shader
+    // invocations per frame for zero visible gain on a blurry, moving
+    // gradient. 1.5 keeps it crisp while cutting GPU work drastically.
+    const resolvedDpr = dpr ?? Math.min(typeof window !== 'undefined' ? window.devicePixelRatio || 1 : 1, 1.5);
+
     const renderer = new Renderer({
-      dpr: dpr ?? (typeof window !== 'undefined' ? window.devicePixelRatio || 1 : 1),
+      dpr: resolvedDpr,
       alpha: true,
       antialias: true
     });
@@ -283,6 +290,28 @@ const Ferrofluid = ({
     const ro = new ResizeObserver(resize);
     ro.observe(container);
 
+    // Auto-pause when off-screen or when the tab isn't visible. A full-bleed
+    // shader like this has no reason to keep rendering every frame once the
+    // user has scrolled past it or switched tabs.
+    const reduceMotion = typeof window !== 'undefined' && window.matchMedia
+      ? window.matchMedia('(prefers-reduced-motion: reduce)').matches
+      : false;
+    let isIntersecting = true;
+    const updateAutoPause = () => {
+      autoPausedRef.current = !isIntersecting || document.visibilityState !== 'visible' || reduceMotion;
+    };
+    const io = new IntersectionObserver(
+      ([entry]) => {
+        isIntersecting = entry.isIntersecting;
+        updateAutoPause();
+      },
+      { threshold: 0 }
+    );
+    io.observe(container);
+    const onVisibilityChange = () => updateAutoPause();
+    document.addEventListener('visibilitychange', onVisibilityChange);
+    updateAutoPause();
+
     const onPointerMove = e => {
       const rect = canvas.getBoundingClientRect();
       const sc = renderer.dpr || 1;
@@ -314,7 +343,7 @@ const Ferrofluid = ({
       } else {
         lastTimeRef.current = t;
       }
-      if (!paused && programRef.current && meshRef.current) {
+      if (!paused && !autoPausedRef.current && programRef.current && meshRef.current) {
         try {
           renderer.render({ scene: meshRef.current });
         } catch (e) {
@@ -327,6 +356,8 @@ const Ferrofluid = ({
     return () => {
       if (rafRef.current) cancelAnimationFrame(rafRef.current);
       if (mouseInteraction) canvas.removeEventListener('pointermove', onPointerMove);
+      io.disconnect();
+      document.removeEventListener('visibilitychange', onVisibilityChange);
       ro.disconnect();
       if (canvas.parentElement === container) {
         container.removeChild(canvas);

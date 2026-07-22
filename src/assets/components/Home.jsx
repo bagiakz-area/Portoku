@@ -11,6 +11,38 @@ import cvFile from "@/assets/CV_WahyuBagia.pdf";
 import LocationIcon from "@iconify-react/mdi/location";
 import { Icon } from "@iconify/react";
 
+const TYPE_SPEED_MS = 26;
+const TYPE_START_DELAY_MS = 700;
+
+const HERO_DESC = [
+  { text: "A ", highlight: false },
+  { text: "full-stack", highlight: true },
+  { text: " developer who can help develop your ", highlight: false },
+  { text: "website", highlight: true },
+  { text: " and keep the ", highlight: false },
+  { text: "server", highlight: true },
+  { text: " secure and ", highlight: false },
+  { text: "well-managed.", highlight: true },
+];
+const HERO_DESC_LENGTH = HERO_DESC.reduce((sum, seg) => sum + seg.text.length, 0);
+
+const renderTypedSegments = (segments, count) => {
+  let remaining = count;
+  return segments.map((seg, i) => {
+    if (remaining <= 0) return null;
+    const sliceLen = Math.min(seg.text.length, remaining);
+    remaining -= sliceLen;
+    const content = seg.text.slice(0, sliceLen);
+    return seg.highlight ? (
+      <span key={i} className="text-gray-400 font-extrabold">
+        {content}
+      </span>
+    ) : (
+      <React.Fragment key={i}>{content}</React.Fragment>
+    );
+  });
+};
+
 const Home = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
@@ -18,6 +50,7 @@ const Home = () => {
 
   const heroRef = useRef(null);
   const [heroVisible, setHeroVisible] = useState(false);
+  const [typedCount, setTypedCount] = useState(0);
 
   useEffect(() => {
     const el = heroRef.current;
@@ -36,6 +69,25 @@ const Home = () => {
     observer.observe(el);
     return () => observer.disconnect();
   }, []);
+
+  useEffect(() => {
+    if (!heroVisible) return;
+
+    let intervalId;
+    const timeoutId = setTimeout(() => {
+      let count = 0;
+      intervalId = setInterval(() => {
+        count += 1;
+        setTypedCount(count);
+        if (count >= HERO_DESC_LENGTH) clearInterval(intervalId);
+      }, TYPE_SPEED_MS);
+    }, TYPE_START_DELAY_MS);
+
+    return () => {
+      clearTimeout(timeoutId);
+      clearInterval(intervalId);
+    };
+  }, [heroVisible]);
 
   return (
     <div className="home-section relative min-h-screen bg-slate-950 text-white font-[syne] antialiased overflow-x-hidden">
@@ -256,12 +308,31 @@ const Home = () => {
           }`}
         >
           <div className="Title">
-            <h1 className="font-[syne] text-5xl mb-1.5 font-extrabold sm:text-8xl -mt-10 ">
-              WAHYU <br />
-              <span className="text-blue-400">BAGIA</span>
+            <h1 className="font-[syne] text-5xl mb-1.5 font-extrabold sm:text-8xl -mt-10">
+              <span className="block overflow-hidden">
+                <span
+                  className={`block transition-transform duration-[900ms] ease-[cubic-bezier(0.16,1,0.3,1)] ${
+                    heroVisible ? "translate-y-0" : "translate-y-full"
+                  }`}
+                >
+                  WAHYU
+                </span>
+              </span>
+              <span className="block overflow-hidden">
+                <span
+                  className={`block text-blue-400 transition-transform duration-[900ms] ease-[cubic-bezier(0.16,1,0.3,1)] delay-150 ${
+                    heroVisible ? "translate-y-0" : "translate-y-full"
+                  }`}
+                >
+                  BAGIA
+                </span>
+              </span>
             </h1>
-            <p className="text-2xl max-w-90 font-semibold mb-3.5 sm: text-3xl mx-auto max-w-140">
-              A <span className="text-gray-400 font-extrabold">full-stack</span> developer who can help develop your <span className="text-gray-400 font-extrabold">website</span> and keep the <span className="text-gray-400 font-extrabold">server</span> secure and <span className="text-gray-400 font-extrabold">well-managed.</span>
+            <p className="text-lg max-w-90 font-semibold mb-3.5 sm:text-3xl mx-auto max-w-140 min-h-[3em] sm:min-h-[2.4em]">
+              {renderTypedSegments(HERO_DESC, typedCount)}
+              {typedCount < HERO_DESC_LENGTH && (
+                <span className="inline-block w-[2px] h-[0.9em] bg-white/70 align-middle ml-0.5 animate-pulse" />
+              )}
             </p>
             <p className="location mb-2.5 text-xl flex gap-1.5 items-center justify-center">
               <Icon icon="boxicons:location" width="20" />

@@ -105,7 +105,7 @@ const SpecularButton = ({
     const fx = fxRef.current;
     if (!btn || !fx) return;
 
-    const dpr = window.devicePixelRatio || 1;
+    const dpr = Math.min(window.devicePixelRatio || 1, 2);
     const renderer = new Renderer({ alpha: true, premultipliedAlpha: true, antialias: true, dpr });
     const gl = renderer.gl;
     gl.clearColor(0, 0, 0, 0);
@@ -180,6 +180,22 @@ const SpecularButton = ({
     };
     window.addEventListener('pointermove', onPointerMove);
 
+    let isIntersecting = true;
+    const autoPaused = { current: false };
+    const updateAutoPause = () => {
+      autoPaused.current = !isIntersecting || document.visibilityState !== 'visible';
+    };
+    const io = new IntersectionObserver(
+      ([entry]) => {
+        isIntersecting = entry.isIntersecting;
+        updateAutoPause();
+      },
+      { threshold: 0 }
+    );
+    io.observe(btn);
+    document.addEventListener('visibilitychange', updateAutoPause);
+    updateAutoPause();
+
     let angle = 2.4;
     let idleAngle = 2.4;
     let bright = 0;
@@ -215,12 +231,16 @@ const SpecularButton = ({
       program.uniforms.uShineSize.value = (p.shineSize * Math.PI) / 180;
       program.uniforms.uShineFade.value = (p.shineFade * Math.PI) / 180;
       program.uniforms.uThickness.value = p.thickness * dpr;
-      renderer.render({ scene: mesh });
+      if (!autoPaused.current) {
+        renderer.render({ scene: mesh });
+      }
     };
     raf = requestAnimationFrame(update);
 
     return () => {
       cancelAnimationFrame(raf);
+      io.disconnect();
+      document.removeEventListener('visibilitychange', updateAutoPause);
       ro.disconnect();
       window.removeEventListener('pointermove', onPointerMove);
       if (gl.canvas.parentNode === fx) fx.removeChild(gl.canvas);

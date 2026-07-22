@@ -567,20 +567,22 @@ const ProfileCardComponent = ({
                       </div>
                     </div>
                   </div>
-                  <button
-                    className="border border-white/10 rounded-lg px-4 py-3 text-xs font-semibold text-white/90 cursor-pointer backdrop-blur-[10px] transition-all duration-200 ease-out hover:border-white/40 hover:-translate-y-px whitespace-nowrap flex-shrink-0"
-                    onClick={handleContactClick}
-                    style={{
-                      pointerEvents: "auto",
-                      display: "block",
-                      gridArea: "auto",
-                      borderRadius: "8px",
-                    }}
-                    type="button"
-                    aria-label={`Contact ${name || "user"}`}
-                  >
-                    {contactText}
-                  </button>
+                  <a href="#contact">
+                    <button
+                      className="border border-white/10 rounded-lg px-4 py-3 text-xs font-semibold text-white/90 cursor-pointer backdrop-blur-[10px] transition-all duration-200 ease-out hover:border-white/40 hover:-translate-y-px whitespace-nowrap flex-shrink-0"
+                      onClick={handleContactClick}
+                      style={{
+                        pointerEvents: "auto",
+                        display: "block",
+                        gridArea: "auto",
+                        borderRadius: "8px",
+                      }}
+                      type="button"
+                      aria-label={`Contact ${name || "user"}`}
+                    >
+                      {contactText}
+                    </button>
+                  </a>
                 </div>
               )}
             </div>

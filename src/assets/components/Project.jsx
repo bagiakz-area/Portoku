@@ -1,7 +1,12 @@
-import { useState, useRef, useEffect } from "react";
-import ros from "@/assets/img/ros.png";
-import jurnal from "@/assets/img/jurnal.png"
-import Beams from '@/components/Beams';
+import { useState, useRef, useEffect, lazy, Suspense } from "react";
+import ros from "@/assets/img/ros.webp";
+import jurnal from "@/assets/img/jurnal.webp"
+
+// Beams pulls in three.js + @react-three/fiber + @react-three/drei, easily
+// the single largest chunk of JS in this app. Lazy-loading it keeps that
+// weight out of the initial bundle entirely - it only downloads once the
+// user actually scrolls near this section.
+const Beams = lazy(() => import('@/components/Beams'));
 
 const projects = [
   {
@@ -24,7 +29,7 @@ const projects = [
   },
 ];
 
-const useRevealOnScroll = (threshold = 0.15) => {
+const useRevealOnScroll = (threshold = 0.15, rootMargin = "0px") => {
   const ref = useRef(null);
   const [isVisible, setIsVisible] = useState(false);
 
@@ -39,12 +44,12 @@ const useRevealOnScroll = (threshold = 0.15) => {
           observer.disconnect();
         }
       },
-      { threshold }
+      { threshold, rootMargin }
     );
 
     observer.observe(el);
     return () => observer.disconnect();
-  }, [threshold]);
+  }, [threshold, rootMargin]);
 
   return [ref, isVisible];
 };
@@ -77,6 +82,10 @@ const Project = () => {
   const hasDraggedRef = useRef(false);
   const total = projects.length;
 
+  // Gate the Beams import behind proximity to the viewport (loads a bit
+  // early via rootMargin) rather than importing three.js the instant the
+  // page mounts, since this section sits below the fold.
+  const [sectionRef, sectionNear] = useRevealOnScroll(0, "400px");
   const [headerRef, headerVisible] = useRevealOnScroll();
   const [carouselRef, carouselVisible] = useRevealOnScroll();
   const [controlsRef, controlsVisible] = useRevealOnScroll();
@@ -131,18 +140,26 @@ const Project = () => {
   }
 
   return (
-    <section id="proyek" className="relative scroll-mt-24 overflow-hidden bg-[#161019] px-6 py-20 md:px-12">
+    <section
+      id="proyek"
+      ref={sectionRef}
+      className="relative scroll-mt-24 overflow-hidden bg-[#161019] px-6 py-20 md:px-12"
+    >
       <div className="pointer-events-none absolute inset-0">
-        <Beams
-          beamWidth={3}
-          beamHeight={30}
-          beamNumber={20}
-          lightColor="#88dbff"
-          speed={2}
-          noiseIntensity={1.75}
-          scale={0.2}
-          rotation={30}
-        />
+        {sectionNear && (
+          <Suspense fallback={null}>
+            <Beams
+              beamWidth={3}
+              beamHeight={30}
+              beamNumber={20}
+              lightColor="#88dbff"
+              speed={2}
+              noiseIntensity={1.75}
+              scale={0.2}
+              rotation={30}
+            />
+          </Suspense>
+        )}
       </div>
 
       <div className="relative z-10 mx-auto max-w-2xl">
@@ -231,6 +248,8 @@ const Project = () => {
                       src={project.image}
                       alt={project.title}
                       draggable={false}
+                      loading="lazy"
+                      decoding="async"
                       className="h-full w-full object-cover grayscale transition-all duration-500 group-hover:scale-[1.03] group-hover:grayscale-0"
                     />
                   </div>

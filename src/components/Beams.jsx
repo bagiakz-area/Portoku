@@ -1,11 +1,35 @@
 /* eslint-disable react/no-unknown-property */
-import { forwardRef, useImperativeHandle, useEffect, useRef, useMemo } from 'react';
+import { forwardRef, useImperativeHandle, useEffect, useRef, useMemo, useState } from 'react';
 
 import * as THREE from 'three';
 
 import { Canvas, useFrame } from '@react-three/fiber';
 import { PerspectiveCamera } from '@react-three/drei';
 import { degToRad } from 'three/src/math/MathUtils.js';
+
+// Tracks whether the canvas's container is on-screen and the tab is
+// visible, so the Three.js render loop can pause instead of rendering
+// a full 3D scene forever, off-screen, in the background.
+function useCanvasActive(ref) {
+  const [active, setActive] = useState(true);
+  useEffect(() => {
+    const el = ref.current;
+    if (!el) return;
+    let inView = true;
+    const update = () => setActive(inView && document.visibilityState === 'visible');
+    const io = new IntersectionObserver(([entry]) => {
+      inView = entry.isIntersecting;
+      update();
+    }, { threshold: 0 });
+    io.observe(el);
+    document.addEventListener('visibilitychange', update);
+    return () => {
+      io.disconnect();
+      document.removeEventListener('visibilitychange', update);
+    };
+  }, [ref]);
+  return active;
+}
 
 function extendMaterial(BaseMaterial, cfg) {
   const physical = THREE.ShaderLib.physical;
@@ -48,11 +72,17 @@ function extendMaterial(BaseMaterial, cfg) {
   return mat;
 }
 
-const CanvasWrapper = ({ children }) => (
-  <Canvas dpr={[1, 2]} frameloop="always" className="w-full h-full relative">
-    {children}
-  </Canvas>
-);
+const CanvasWrapper = ({ children }) => {
+  const wrapperRef = useRef(null);
+  const active = useCanvasActive(wrapperRef);
+  return (
+    <div ref={wrapperRef} className="w-full h-full relative">
+      <Canvas dpr={[1, 1.5]} frameloop={active ? 'always' : 'never'} className="w-full h-full relative">
+        {children}
+      </Canvas>
+    </div>
+  );
+};
 
 const hexToNormalizedRGB = hex => {
   const clean = hex.replace('#', '');

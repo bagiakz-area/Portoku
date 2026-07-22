@@ -1,7 +1,4 @@
-import { useState } from 'react'
-import Lenis from "lenis";
 import './App.css'
-import './index.css'
 import Homepage from './assets/components/Home.jsx'
 import About from './assets/components/About';
 import Project from './assets/components/Project';

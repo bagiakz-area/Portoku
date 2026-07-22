@@ -208,7 +208,10 @@ function processImage(img) {
   }
 
   const u = new Float32Array(size);
-  const ITERATIONS = 200;
+  // 200 iterations blocked the main thread synchronously on every mount.
+  // The diffusion visually converges well before that; 80 keeps the look
+  // while cutting this blocking cost by more than half.
+  const ITERATIONS = 80;
   const C = 0.01;
   const omega = 1.85;
 
@@ -382,10 +385,18 @@ export default function MetallicPaint({
 
     const canvas = canvasRef.current;
     const gl = glRef.current;
-    const dpr = window.devicePixelRatio || 1;
-    const base = 1000;
-    const w = Math.max(1, Math.round(base * Math.sqrt(aspectRatio) * dpr));
-    const h = Math.max(1, Math.round((base / Math.sqrt(aspectRatio)) * dpr));
+    // Cap DPR at 2: this shader is sharp fine detail on a small logo, not a
+    // full-bleed background, so anything above 2x is wasted GPU work.
+    const dpr = Math.min(window.devicePixelRatio || 1, 2);
+    // Size the actual render target off the element's displayed CSS size
+    // rather than a fixed 1000px base. Previously this rendered at up to
+    // 6000x1500px for what is a ~176x44px nav logo - over 100x more pixels
+    // than needed, redrawn every animation frame.
+    const rect = canvas.getBoundingClientRect();
+    const displayW = rect.width || 176;
+    const displayH = rect.height || displayW / aspectRatio;
+    const w = Math.max(1, Math.round(displayW * dpr));
+    const h = Math.max(1, Math.round(displayH * dpr));
     canvas.width = w;
     canvas.height = h;
     gl.viewport(0, 0, w, h);
@@ -486,16 +497,18 @@ export default function MetallicPaint({
       const delta = time - lastTimeRef.current;
       lastTimeRef.current = time;
 
-      if (mouseAnimRef.current) {
-        mouse.x += (mouse.targetX - mouse.x) * 0.08;
-        mouse.y += (mouse.targetY - mouse.y) * 0.08;
-        animTimeRef.current = mouse.x * 3000 + mouse.y * 1500;
-      } else {
-        animTimeRef.current += delta * speedRef.current;
-      }
+      if (document.visibilityState === 'visible') {
+        if (mouseAnimRef.current) {
+          mouse.x += (mouse.targetX - mouse.x) * 0.08;
+          mouse.y += (mouse.targetY - mouse.y) * 0.08;
+          animTimeRef.current = mouse.x * 3000 + mouse.y * 1500;
+        } else {
+          animTimeRef.current += delta * speedRef.current;
+        }
 
-      gl.uniform1f(u.u_time, animTimeRef.current);
-      gl.drawArrays(gl.TRIANGLE_STRIP, 0, 4);
+        gl.uniform1f(u.u_time, animTimeRef.current);
+        gl.drawArrays(gl.TRIANGLE_STRIP, 0, 4);
+      }
       rafRef.current = requestAnimationFrame(render);
     };
 
