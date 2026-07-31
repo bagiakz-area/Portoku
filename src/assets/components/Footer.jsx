@@ -10,7 +10,7 @@ const Footer = () => {
         </p>
         <p className="text-sm">Gianyar, Bali</p>
         <a
-          href="mailto:ngurahwahyubagia@gmail.com?subject=Halo&body=Wahyu%20apakah%20anda%20bersedia%20untuk%20kerjasama..?"
+          href="mailto:ngurahwahyubagia@gmail.com?subject=Interested in your work&body=Hi Wahyu%20, are%20you%20avaliable%20to%20work..?"
           className="font-[fira_code] text-sm underline decoration-white/30 transition-colors duration-300 hover:text-[#0078ff] hover:decoration-[#0078ff]"
         >
           ngurahwahyubagia@gmail.com

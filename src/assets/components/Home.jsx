@@ -59,7 +59,7 @@ const Home = () => {
         />
       )}
 
-      <nav className="fixed w-full top-0 z-40 pt-3 px-6 lg:px-35">
+      <nav className="fixed w-full top-0 z-40 pt-3 px-6 3xl:px-70 sm:px-40  lg:pt-7">
         <GlassSurface
           width="100%"
           height={64}

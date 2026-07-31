@@ -1,6 +1,7 @@
 import { useState, useRef, useEffect, lazy, Suspense } from "react";
 import ros from "@/assets/img/ros.webp";
 import jurnal from "@/assets/img/jurnal.webp"
+import generator from "@/assets/img/generator.png"
 
 // Beams pulls in three.js + @react-three/fiber + @react-three/drei, easily
 // the single largest chunk of JS in this app. Lazy-loading it keeps that
@@ -26,6 +27,15 @@ const projects = [
     tags: ["HTML", "CSS", "JavaScript", "FireBase"],
     image: jurnal,
     link: "https://bagiakz-area.github.io/JurnalKu/",
+  },
+  {
+    id: "Generator",
+    title: "Social Card Generator",
+    description:
+      "A fully customizable SVG social profile card generator, ready to drop straight into your GitHub README.",
+    tags: ["HTML", "CSS", "JavaScript"],
+    image: generator,
+    link: "https://socialcard-generator.vercel.app/",
   },
 ];
 
