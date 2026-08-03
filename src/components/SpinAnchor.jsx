@@ -3,7 +3,7 @@ import React, { useEffect, useRef } from "react";
 const SPIN_SPEED = 90; // derajat per detik pas lagi di-hover
 const TAU = 0.25; // makin gede angkanya, makin "kenyal"/smooth pas mulai & berhenti
 
-const SpinAnchor = ({ children, href = "#", target, rel, className = "" }) => {
+const SpinAnchor = ({ children, href = "#", target, rel, className = "", ariaLabel }) => {
   const hoveredRef = useRef(false);
   const targetAngleRef = useRef(0);
   const currentAngleRef = useRef(0);
@@ -77,6 +77,7 @@ const SpinAnchor = ({ children, href = "#", target, rel, className = "" }) => {
       href={href}
       target={target}
       rel={rel}
+      aria-label={ariaLabel}
       className={className}
       onClick={handleClick}
       onMouseEnter={handleEnter}

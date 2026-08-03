@@ -128,6 +128,7 @@ const About = () => {
             <p className="flex flex-col items-center">
               <a
                 href="https://www.w3schools.com/html/html_intro.asp"
+                aria-label="HTML"
                 className="hover:transform hover:scale-110 transition duration-300 ease-in-out"
               >
                 <Icon icon="flowbite:html-solid" width="60" color="#00c8fc" />
@@ -137,6 +138,7 @@ const About = () => {
             <p className="flex flex-col items-center">
               <a
                 href="https://www.w3schools.com/js/default.asp"
+                aria-label="JavaScript"
                 className="hover:transform hover:scale-110 transition duration-300 ease-in-out"
               >
                 <Icon icon="akar-icons:javascript-fill" width="60" />
@@ -146,6 +148,7 @@ const About = () => {
             <p className="flex flex-col items-center">
               <a
                 href="https://www.w3schools.com/css/default.asp"
+                aria-label="CSS"
                 className="hover:transform hover:scale-110 transition duration-300 ease-in-out"
               >
                 <Icon icon="flowbite:css-solid" width="60" color="#00c8fc" />
@@ -155,6 +158,7 @@ const About = () => {
             <p className="flex flex-col items-center">
               <a
                 href="https://www.mysql.com/"
+                aria-label="MySQL"
                 className="hover:transform hover:scale-110 transition duration-300 ease-in-out"
               >
                 <Icon icon="lineicons:mysql" width="60" />
@@ -162,7 +166,7 @@ const About = () => {
               <span className="text-blue-400">MySQL</span>
             </p>
             <p className="flex flex-col items-center">
-              <SpinAnchor href="https://react.dev/">
+              <SpinAnchor href="https://react.dev/" ariaLabel="React">
                 <Icon icon="akar-icons:react-fill" width="60" color="#00c8fc" />
               </SpinAnchor>
               React
@@ -170,6 +174,7 @@ const About = () => {
             <p className="flex flex-col items-center">
               <a
                 href="https://wordpress.org/"
+                aria-label="WordPress"
                 className="hover:transform hover:scale-110 transition duration-300 ease-in-out"
               >
                 <Icon icon="mdi:wordpress" width="60" />
@@ -179,6 +184,7 @@ const About = () => {
             <p className="flex flex-col items-center">
               <a
                 href="https://tailwindcss.com/"
+                aria-label="Tailwind CSS"
                 className="hover:transform hover:scale-110 transition duration-300 ease-in-out"
               >
                 <Icon icon="mdi:tailwind" width="60" color="#00c8fc" />
@@ -188,6 +194,7 @@ const About = () => {
             <p className="flex flex-col items-center">
               <a
                 href="https://supabase.com/"
+                aria-label="Supabase"
                 className="hover:transform hover:scale-110 transition duration-300 ease-in-out"
               >
                 <Icon icon="devicon-plain:supabase" width="60" />
@@ -197,6 +204,7 @@ const About = () => {
             <p className="flex flex-col items-center">
               <a
                 href="https://www.figma.com/"
+                aria-label="Figma"
                 className="hover:transform hover:scale-110 transition duration-300 ease-in-out"
               >
                 <Icon icon="solar:figma-bold" width="60" color="#00c8fc" />

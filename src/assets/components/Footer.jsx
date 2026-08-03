@@ -29,18 +29,21 @@ const Footer = () => {
       <div className="order-3 flex items-center gap-4 text-white/70 sm:order-3 sm:justify-self-end">
         <a
           href="https://github.com/bagiakz-area"
+          aria-label="GitHub"
           className="transition-all duration-300 hover:scale-110 hover:text-[#0078ff]"
         >
           <Icon icon="line-md:github" width="30" />
         </a>
         <a
           href="https://www.linkedin.com/in/i-gusti-ngurah-kadek-wahyu-bagia-a0a53141b/"
+          aria-label="LinkedIn"
           className="transition-all duration-300 hover:scale-110 hover:text-[#0078ff]"
         >
           <Icon icon="line-md:linkedin" width="30" />
         </a>
         <a
           href="mailto:ngurahwahyubagia@gmail.com?subject=Halo&body=Wahyu%20apakah%20anda%20bersedia%20untuk%20kerjasama..?"
+          aria-label="Email"
           className="transition-all duration-300 hover:scale-110 hover:text-[#0078ff]"
         >
           <Icon icon="line-md:email" width="30" />

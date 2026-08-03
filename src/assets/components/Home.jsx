@@ -329,9 +329,9 @@ const Home = () => {
               </div>
             </SpecularButton>
             <div className="social flex gap-5 justify-center mt-2.5">
-              <a href="https://github.com/bagiakz-area" className="hover:transform hover:scale-110 transition duration-300 ease-in-out"><Icon icon="line-md:github" width="30" /></a>
-              <a href="https://www.linkedin.com/in/i-gusti-ngurah-kadek-wahyu-bagia-a0a53141b/" className="hover:transform hover:scale-110 transition duration-300 ease-in-out"><Icon icon="line-md:linkedin" width="30" /></a>
-              <a href="mailto:ngurahwahyubagia@gmail.com?subject=Halo&body=Wahyu%20apakah%20anda%20bersedia%20untuk%20kerjasama..?" className="hover:transform hover:scale-110 transition duration-300 ease-in-out"><Icon icon="line-md:email" width="30" /></a>
+              <a href="https://github.com/bagiakz-area" aria-label="GitHub" className="hover:transform hover:scale-110 transition duration-300 ease-in-out"><Icon icon="line-md:github" width="30" /></a>
+              <a href="https://www.linkedin.com/in/i-gusti-ngurah-kadek-wahyu-bagia-a0a53141b/" aria-label="LinkedIn" className="hover:transform hover:scale-110 transition duration-300 ease-in-out"><Icon icon="line-md:linkedin" width="30" /></a>
+              <a href="mailto:ngurahwahyubagia@gmail.com?subject=Halo&body=Wahyu%20apakah%20anda%20bersedia%20untuk%20kerjasama..?" aria-label="Email" className="hover:transform hover:scale-110 transition duration-300 ease-in-out"><Icon icon="line-md:email" width="30" /></a>
             </div>
           </div>
         </header>
