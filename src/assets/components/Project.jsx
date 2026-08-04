@@ -1,13 +1,14 @@
 import { useState, useRef, useEffect, lazy, Suspense } from "react";
 import ros from "@/assets/img/ros.webp";
-import jurnal from "@/assets/img/jurnal.webp"
-import generator from "@/assets/img/generator.png"
+import jurnal from "@/assets/img/jurnal.webp";
+import generator from "@/assets/img/generator.png";
+import mongia from "@/assets/img/mongia.png";
 
 // Beams pulls in three.js + @react-three/fiber + @react-three/drei, easily
 // the single largest chunk of JS in this app. Lazy-loading it keeps that
 // weight out of the initial bundle entirely - it only downloads once the
 // user actually scrolls near this section.
-const Beams = lazy(() => import('@/components/Beams'));
+const Beams = lazy(() => import("@/components/Beams"));
 
 const projects = [
   {
@@ -27,6 +28,14 @@ const projects = [
     tags: ["HTML", "CSS", "JavaScript", "FireBase"],
     image: jurnal,
     link: "https://bagiakz-area.github.io/JurnalKu/",
+  },
+  {
+    id: "Mongia",
+    title: "MountaGia - Mountain Guide",
+    description: "A simple web app for managing personal tasks and notes.",
+    tags: ["Typescript", "Next.js", "Supabase"],
+    image: mongia,
+    link: "https://mount-guide.vercel.app/",
   },
   {
     id: "Generator",
@@ -54,7 +63,7 @@ const useRevealOnScroll = (threshold = 0.15, rootMargin = "0px") => {
           observer.disconnect();
         }
       },
-      { threshold, rootMargin }
+      { threshold, rootMargin },
     );
 
     observer.observe(el);
@@ -79,7 +88,11 @@ const ChevronIcon = ({ direction }) => (
     strokeLinejoin="round"
     className="h-5 w-5"
   >
-    {direction === "left" ? <path d="M15 6l-6 6 6 6" /> : <path d="M9 6l6 6-6 6" />}
+    {direction === "left" ? (
+      <path d="M15 6l-6 6 6 6" />
+    ) : (
+      <path d="M9 6l6 6-6 6" />
+    )}
   </svg>
 );
 
@@ -143,7 +156,10 @@ const Project = () => {
 
   if (total === 0) {
     return (
-      <section id="proyek" className="scroll-mt-24 bg-[#161019] py-24 text-center text-[#F1EAD9]">
+      <section
+        id="proyek"
+        className="scroll-mt-24 bg-[#161019] py-24 text-center text-[#F1EAD9]"
+      >
         Belum ada proyek untuk ditampilkan.
       </section>
     );
@@ -203,7 +219,9 @@ const Project = () => {
         >
           <div
             className={`flex select-none ${
-              isDragging ? "" : "transition-transform duration-500 ease-out motion-reduce:duration-0"
+              isDragging
+                ? ""
+                : "transition-transform duration-500 ease-out motion-reduce:duration-0"
             }`}
             style={{
               transform: `translateX(calc(${-index * 100}% + ${dragOffset}px))`,
@@ -318,7 +336,8 @@ const Project = () => {
               />
             </div>
             <span className="font-mono text-xs tracking-widest text-[#F1EAD9]/50">
-              {String(index + 1).padStart(2, "0")} / {String(total).padStart(2, "0")}
+              {String(index + 1).padStart(2, "0")} /{" "}
+              {String(total).padStart(2, "0")}
             </span>
           </div>
 
