@@ -32,7 +32,7 @@ const projects = [
   {
     id: "Mongia",
     title: "MountaGia - Mountain Guide",
-    description: "A simple web app for managing personal tasks and notes.",
+    description: "A simple web app for exploring and planning mountain adventures with guide.",
     tags: ["Typescript", "Next.js", "Supabase"],
     image: mongia,
     link: "https://mount-guide.vercel.app/",
